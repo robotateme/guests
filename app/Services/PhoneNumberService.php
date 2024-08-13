@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Data\PhoneNumber\PhoneNumberInfoData;
+use App\Services\Exceptions\ScenarioException;
 use libphonenumber\geocoding\PhoneNumberOfflineGeocoder;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
+use Spatie\LaravelData\Data;
 
 class PhoneNumberService
 {
@@ -23,14 +26,26 @@ class PhoneNumberService
     public static function validatePhoneNumber(string $phoneNumber): bool
     {
         $phoneNumberUtil = PhoneNumberUtil::getInstance();
-        $geoCoderUtil = PhoneNumberOfflineGeocoder::getInstance();
         $phoneNumber = $phoneNumberUtil->parse($phoneNumber);
-//        dd($geoCoderUtil->getDescriptionForNumber($phoneNumber, 'en_EN'));
         return $phoneNumberUtil->isValidNumber($phoneNumber);
     }
 
-    public function getInfo(string $phoneNumber): array
+    /**
+     * @throws ScenarioException
+     */
+    public function getInfo(string $phoneNumber): PhoneNumberInfoData
     {
+        try {
+            $phoneNumber = $this->phoneNumberUtil->parse($phoneNumber);
+            $geocoderInfo = $this->geoCoder->getDescriptionForNumber($phoneNumber, 'en_EN');
+        } catch (NumberParseException $e) {
+            throw new ScenarioException($e->getMessage());
+        }
 
+        return PhoneNumberInfoData::from([
+            'phone_number' => $phoneNumber->getNationalNumber(),
+            'country_code' => $phoneNumber->getCountryCode(),
+            'country_name' => $geocoderInfo
+        ]);
     }
 }

@@ -26,6 +26,6 @@ class TestingCommand extends Command
      */
     public function handle(PhoneNumberService $phoneService)
     {
-        PhoneNumberService::validatePhoneNumber('+447534418723');
+        dd($phoneService->getInfo('+447534418723')->toArray());
     }
 }
