@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Repositories\GuestsRepository;
 use App\Services\PhoneNumberService;
 use Illuminate\Console\Command;
 
@@ -24,8 +25,8 @@ class TestingCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(PhoneNumberService $phoneService)
+    public function handle(GuestsRepository $repository)
     {
-        dd($phoneService->getInfo('+447534418723')->toArray());
+        dd($repository->getOne(1));
     }
 }

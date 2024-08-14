@@ -42,6 +42,7 @@ class GuestsController extends ApiController
 
     public function show(int $id, GuestGetOneScenario $scenario)
     {
+        sleep(2);
         return new JsonResponse([
             'test' => 1
         ]);

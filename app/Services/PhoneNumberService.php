@@ -7,7 +7,6 @@ use App\Services\Exceptions\ScenarioException;
 use libphonenumber\geocoding\PhoneNumberOfflineGeocoder;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
-use Spatie\LaravelData\Data;
 
 class PhoneNumberService
 {

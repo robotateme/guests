@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Expression;
 use Spatie\LaravelData\Data;
 
 abstract class BaseRepository implements RepositoryInterface
@@ -18,41 +19,41 @@ abstract class BaseRepository implements RepositoryInterface
 
     /**
      * @param  array|Closure|null  $where
+     * @param  Expression|string|null  $select
      * @param  array|Closure|null  $with
-     * @param  Closure|null  $callback
      * @return array|Arrayable
      */
     protected function getList(
         null|array|Closure $where = null,
+        Expression|string|null $select = null,
         null|array|Closure $with = null,
-        ?Closure $callback = null
     ): array|Arrayable {
-        $data = $this->getBuilder()
+        return $this->getBuilder()
+            ->when(!is_null($select), fn(Builder $query) => $query->select($select))
             ->when(!is_null($where), fn(Builder $query) => $query->where($where))
-            ->when(!is_null($with), fn(Builder $query) => $query->with($where));
-
-        return $this->prepareData($data, $callback);
+            ->when(!is_null($with), fn(Builder $query) => $query->with($where))
+            ->get();
     }
 
     /**
      * @param  int  $id
      * @param  array|Closure|null  $where
+     * @param  Expression|string|null  $select
      * @param  array|Closure|null  $with
-     * @param  Closure|null  $callback
      * @return array|Arrayable
      */
     public function getOne(
         int $id,
         null|array|Closure $where = null,
+        Expression|string|null $select = null,
         null|array|Closure $with = null,
-        ?Closure $callback = null
     ): array|Arrayable {
-        $data = $this->getBuilder()
+        return $this->getBuilder()
+            ->when(!is_null($select), fn(Builder $query) => $query->select($select))
             ->when(!is_null($where), fn(Builder $query) => $query->where($where))
             ->when(!is_null($with), fn(Builder $query) => $query->with($where))
-            ->find($id);
-
-        return $this->prepareData($data, $callback);
+            ->find($id)
+            ->toArray();
     }
 
     /**
@@ -72,14 +73,5 @@ abstract class BaseRepository implements RepositoryInterface
     private function getBuilder(): Builder
     {
         return $this->model->newQuery();
-    }
-
-    protected function prepareData(Arrayable|array $data, ?Closure $callback = null): Arrayable|array
-    {
-        if (!is_null($callback)) {
-            return $callback();
-        }
-
-        return $data;
     }
 }
