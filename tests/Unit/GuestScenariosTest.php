@@ -49,7 +49,7 @@ class GuestScenariosTest extends TestCase
                     'first_name' => 'John',
                     'last_name' => 'Doe',
                     'email' => 'testing@example.com',
-                    'phone_number' => '+79780310905',
+                    'phone_number' => '+79781231213',
                     'country' => 'Russian Federation',
                     'created_at' => now()->format('Y-m-d H:i:s'),
                     'updated_at' => now()->format('Y-m-d H:i:s')
