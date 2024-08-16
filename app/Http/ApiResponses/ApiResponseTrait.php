@@ -2,7 +2,7 @@
 
 namespace App\Http\ApiResponses;
 
-use App\Http\Controllers\ApiResponses\Enums\StatusMessagesEnum;
+use App\Http\ApiResponses\Enums\StatusMessagesEnum;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 
