@@ -2,7 +2,7 @@
 
 namespace App\Http\ApiResponses;
 
-use App\Http\Controllers\ApiResponses\Formats\DefaultFormat;
+use App\Http\ApiResponses\Formats\DefaultFormat;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 
