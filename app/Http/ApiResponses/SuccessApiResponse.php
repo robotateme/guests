@@ -2,7 +2,7 @@
 
 namespace App\Http\ApiResponses;
 
-use App\Http\Controllers\ApiResponses\Contracts\ApiResponse;
+use App\Http\ApiResponses\Contracts\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
 class SuccessApiResponse extends ApiResponse
