@@ -30,16 +30,12 @@ class PhoneNumberService
     }
 
     /**
-     * @throws ScenarioException
+     * @throws NumberParseException
      */
     public function getInfo(string $phoneNumber): PhoneNumberInfoData
     {
-        try {
-            $phoneNumber = $this->phoneNumberUtil->parse($phoneNumber);
-            $geocoderInfo = $this->geoCoder->getDescriptionForNumber($phoneNumber, 'en_EN');
-        } catch (NumberParseException $e) {
-            throw new ScenarioException($e->getMessage());
-        }
+        $phoneNumber = $this->phoneNumberUtil->parse($phoneNumber);
+        $geocoderInfo = $this->geoCoder->getDescriptionForNumber($phoneNumber, 'en_EN');
 
         return PhoneNumberInfoData::from([
             'phone_number' => $phoneNumber->getNationalNumber(),

@@ -2,7 +2,10 @@
 
 namespace App\Repositories\Contracts;
 
+use App\Repositories\Exceptions\RepositoryException;
+use App\Repositories\Exceptions\ResourceNotFoundException;
 use Closure;
+use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +44,7 @@ abstract class BaseRepository implements RepositoryInterface
      * @param  Expression|string|null  $select
      * @param  array|Closure|null  $with
      * @return array|Arrayable
+     * @throws RepositoryException
      */
     public function getOne(
         int $id,
@@ -48,21 +52,31 @@ abstract class BaseRepository implements RepositoryInterface
         Expression|string|null $select = null,
         null|array|Closure $with = null,
     ): array|Arrayable {
-        return $this->getBuilder()
+        $result = $this->getBuilder()
             ->when(!is_null($select), fn(Builder $query) => $query->select($select))
             ->when(!is_null($where), fn(Builder $query) => $query->where($where))
             ->when(!is_null($with), fn(Builder $query) => $query->with($where))
-            ->find($id)
-            ->toArray();
+            ->find($id);
+
+        if (is_null($result)) {
+            throw new ResourceNotFoundException("Resource not found");
+        }
+
+        return $result->toArray();
     }
 
     /**
      * @param  Data  $attributes
      * @return bool
+     * @throws RepositoryException
      */
     public function create(Data $attributes): bool
     {
-        return $this->getBuilder()->insert($attributes->toArray());
+        try {
+            return $this->getBuilder()->insert($attributes->toArray());
+        } catch (Exception $e) {
+            throw new RepositoryException($e);
+        }
     }
 
     public function update(Data $attributes): int

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\IntlPhoneNumberRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,7 +28,7 @@ class GuestStoreRequest extends FormRequest
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'string', 'email', 'max:255', 'unique:guests'],
-            'phone_number' => ['required', 'string', 'max:255', 'unique:guests'],
+            'phone_number' => ['required', 'string', 'max:255', 'unique:guests', new IntlPhoneNumberRule()],
             'country' => ['string', 'max:255'],
         ];
     }
