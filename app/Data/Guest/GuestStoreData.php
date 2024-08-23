@@ -2,12 +2,15 @@
 
 namespace App\Data\Guest;
 
+use App\Data\Casts\NormalizePhoneCast;
 use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 
 class GuestStoreData extends Data
 {
     public function __construct(
+        #[WithCast(NormalizePhoneCast::class)]
         #[MapName('phone_number', 'phone_number')]
         public string $phoneNumber,
         #[MapName('first_name', 'first_name')]

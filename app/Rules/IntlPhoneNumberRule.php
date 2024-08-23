@@ -15,6 +15,7 @@ class IntlPhoneNumberRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        $value = preg_replace('/\s+/', '', $value);
         preg_match('/^\+?[1-9]\d{1,14}$/', $value, $matches);
 
         if (count($matches) < 1) {

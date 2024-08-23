@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Scenarios;
+namespace App\Services\Scenarios\Guest;
 
 use App\Data\Guest\GuestResponseData;
 use App\Repositories\Exceptions\RepositoryException;

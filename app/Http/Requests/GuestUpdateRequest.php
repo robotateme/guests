@@ -5,8 +5,12 @@ namespace App\Http\Requests;
 use App\Rules\IntlPhoneNumberRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class GuestStoreRequest extends FormRequest
+/**
+ * @property int $id
+ */
+class GuestUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +28,19 @@ class GuestStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id' => ['required', 'integer'],
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:guests'],
-            'phone_number' => ['required', 'string', 'max:255', 'unique:guests', new IntlPhoneNumberRule()],
-            'country' => ['nullable', 'max:255', 'string'],
+            'email' => [
+                'nullable', 'string', 'email', 'max:255',
+                Rule::unique('guests', 'email')->ignore($this->get('id'))
+            ],
+            'phone_number' => [
+                'required', 'string', 'max:255',
+                new IntlPhoneNumberRule(),
+                Rule::unique('guests', 'phone_number')->ignore($this->get('id'))
+            ],
+            'country' => ['string', 'max:255'],
         ];
     }
 }
-

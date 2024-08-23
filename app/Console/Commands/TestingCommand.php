@@ -25,8 +25,8 @@ class TestingCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(GuestsRepository $repository)
+    public function handle()
     {
-        dd($repository->getOne(1));
+        dd((bool) null);
     }
 }

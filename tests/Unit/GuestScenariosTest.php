@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Repositories\GuestsRepository;
-use App\Services\Scenarios\GuestGetOneScenario;
+use App\Services\Scenarios\Guest\GuestGetOneScenario;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use JetBrains\PhpStorm\NoReturn;
 use Mockery;
