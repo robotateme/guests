@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Data\PhoneNumber\PhoneNumberInfoData;
-use App\Services\Exceptions\ScenarioException;
 use libphonenumber\geocoding\PhoneNumberOfflineGeocoder;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;

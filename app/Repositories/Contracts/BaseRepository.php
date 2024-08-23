@@ -8,16 +8,14 @@ use Closure;
 use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Query\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Expression;
-use Spatie\LaravelData\Data;
-
 abstract class BaseRepository implements RepositoryInterface
 {
-    public const string TABLE_NAME = 'guests';
-
     public function __construct(private readonly Model $model)
     {
+
     }
 
     /**
@@ -26,7 +24,7 @@ abstract class BaseRepository implements RepositoryInterface
      * @param  array|Closure|null  $with
      * @return array|Arrayable
      */
-    protected function getList(
+    public function getList(
         null|array|Closure $where = null,
         Expression|string|null $select = null,
         null|array|Closure $with = null,
@@ -61,30 +59,62 @@ abstract class BaseRepository implements RepositoryInterface
         if (is_null($result)) {
             throw new ResourceNotFoundException("Resource not found");
         }
-
         return $result->toArray();
     }
 
     /**
-     * @param  Data  $attributes
+     * @param  int  $id
      * @return bool
+     */
+    public function existsById(int $id): bool
+    {
+        return $this->getBuilder()
+            ->where('id', '=', $id)
+            ->exists();
+    }
+
+    /**
+     * @param  array  $attributes
+     * @return array
      * @throws RepositoryException
      */
-    public function create(Data $attributes): bool
+    public function create(array $attributes): array
     {
         try {
-            return $this->getBuilder()->insert($attributes->toArray());
+            return $this->getBuilder()
+                ->create($attributes)
+                ->toArray();
+
         } catch (Exception $e) {
             throw new RepositoryException($e);
         }
     }
 
-    public function update(Data $attributes): int
+    /**
+     * @param $id
+     * @param  array  $attributes
+     * @return bool
+     */
+    public function update($id, array $attributes): bool
     {
-        return $this->getBuilder()->update($attributes->toArray());
+        return $this->getBuilder()
+            ->find($id)->update($attributes) > 0;
     }
 
-    private function getBuilder(): Builder
+    /**
+     * @param  int  $id
+     * @return bool|null
+     */
+    public function deleteById(int $id): ?bool
+    {
+        return $this->getBuilder()
+            ->find($id)?->delete();
+    }
+
+    /**
+     * @return Builder
+     */
+    private function getBuilder(): BuilderContract
     {
         return $this->model->newQuery();
     }
