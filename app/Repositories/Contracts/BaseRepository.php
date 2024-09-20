@@ -94,11 +94,16 @@ abstract class BaseRepository implements RepositoryInterface
      * @param $id
      * @param  array  $attributes
      * @return bool
+     * @throws ResourceNotFoundException
      */
     public function update($id, array $attributes): bool
     {
-        return $this->getBuilder()
-            ->find($id)->update($attributes) > 0;
+        $model = $this->getBuilder()->find($id);
+        if ($model === null) {
+            throw new ResourceNotFoundException();
+        }
+
+        return $model->update($attributes);
     }
 
     /**
