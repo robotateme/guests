@@ -99,7 +99,7 @@ abstract class BaseRepository implements RepositoryInterface
     public function update($id, array $attributes): bool
     {
         $model = $this->getBuilder()->where(['id' => $id]);
-        if ($model === null) {
+        if (!$model->exists()) {
             throw new ResourceNotFoundException();
         }
         return $model->update($attributes);
